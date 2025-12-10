@@ -27,7 +27,7 @@ export async function PUT(request, { params }) {
 
   const editTodoData = await request.json();
   const { id } = await params;
-  const editedTodo = await Todo.updateMany(
+  const editedTodo = await Todo.findByIdAndUpdate(
     { _id: id, userId: user.id },
     editTodoData,
     {
