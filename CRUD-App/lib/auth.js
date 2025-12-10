@@ -24,7 +24,6 @@ export async function getLoggedInUser() {
   }
 
   const session = await Session.findById(sessionId).select("-password -__v");
-console.log(`Sessoin: ${session} \n SessionID ${sessionId}`)
   if (!session) {
     return errorResponse;
   }

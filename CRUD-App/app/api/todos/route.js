@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 export async function GET() {
   await connectDB();
   const user = await getLoggedInUser();
-console.log('this is user', user)
+
   if (user instanceof Response) {
     return user;
   }

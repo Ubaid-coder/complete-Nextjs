@@ -6,8 +6,8 @@ export async function GET(_, { params }) {
   await connectDB();
   const user = await getLoggedInUser();
   if (user instanceof Response) return user;
-
   const { id } = await params;
+
   const todo = await Todo.findOne({ _id: id, userId: user.id });
   if (!todo) {
     return Response.json(
@@ -44,7 +44,8 @@ export async function DELETE(_, { params }) {
   if (user instanceof Response) return user;
 
   const { id } = await params;
-  await Todo.deleteOne({ _id: id, userId: user.id });
+  
+  await Todo.findByIdAndDelete({ _id: id });
   return new Response(null, {
     status: 204,
   });
