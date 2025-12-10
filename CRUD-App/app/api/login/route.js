@@ -11,6 +11,7 @@ export async function POST(request) {
   const { email, password } = await request.json();
   try {
     const user = await User.findOne({ email });
+
     const isPasswordValid = bcrypt.compare(password, user.password);
 
     if (!user || !isPasswordValid) {
@@ -22,15 +23,19 @@ export async function POST(request) {
       );
     }
 
-    const session = await Session.create({ userId: user._id });
-
+    const checkSessionUser = await Session.find({ userId: user._id });
+    //At a time login only 2 devices
+    if (checkSessionUser.length>=2){
+      return Response.json({msg:'Login in another device!'}, {status: 403})
+    }
+      const session = await Session.create({ userId: user._id });
 
     cookieStore.set("userId", signCookie(session.id), {
       httpOnly: true,
       maxAge: 60 * 60 * 24,
     });
 
-    return Response.json({name: user.name, email: user.email}, {
+    return Response.json({ name: user.name, email: user.email }, {
       status: 200,
     });
   } catch (err) {
